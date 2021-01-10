@@ -1,0 +1,43 @@
+jwt:
+  secret: authjwt
+spring:
+  admin:
+    email: patharepraful@gmail.com
+  datasource:
+    password: 
+    platform: mysql
+    url: jdbc:mysql://localhost:3306/shopmart?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    password: ''
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+    username: patharepraful@gmail.com
+
+openapi: 3.0.0
+
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+# 2) Apply the security globally to all operations
+security:
+  - bearerAuth: []         # use the same name as above
