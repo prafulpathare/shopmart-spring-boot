@@ -17,10 +17,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Product {
 		
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "product_id")
 	private long product_id;
-	
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -28,9 +26,8 @@ public class Product {
     private Supplier supplier;
 	
 	public Product() {}
-
+	
 	public Product(long product_id, Supplier supplier) {
-		super();
 		this.product_id = product_id;
 		this.supplier = supplier;
 	}
@@ -50,6 +47,10 @@ public class Product {
 	public void setSupplier(Supplier supplier) {
 		this.supplier = supplier;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Product [product_id=" + product_id + ", supplier=" + supplier + "]";
+	}
+
 }
