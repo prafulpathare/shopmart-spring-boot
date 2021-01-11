@@ -1,4 +1,4 @@
-package com.shopmart.model;
+package com.shopmart.dto;
 
 public class JwtRequest{
 	

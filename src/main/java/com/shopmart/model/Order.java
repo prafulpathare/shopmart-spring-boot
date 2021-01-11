@@ -1,13 +1,19 @@
 package com.shopmart.model;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,71 +26,82 @@ public class Order {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "order_id")
-	private long orderId;
+	private long order_id;
 	
-	@Column(name = "total") @NotNull
-	private long total;
-	@Column(name = "delivery_address") @NotNull
-	private String deliveryAddress;
-	@Column(name = "payment_option") @NotNull
-	private String paymentOption;
-	@Column(name = "is_paid") @NotNull
-	private boolean isPaid = false;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToMany(mappedBy="order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<OrderItem> order_items;
+    
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "customer_id", nullable = false)
     @JsonIgnore
-    private User user;
-	
-	public Order() {
+    private Customer customer;
+    
+    @Column(name = "payed")
+    private boolean payed = false;
+    
+    public enum PaymentOption {
+    	MASTERCARD, PAYPAL, BANK_TRANSFER, CASH_ON_DELIVERY;
+    }
+    
+    @Column(name = "payment_option") @NotNull
+	@Enumerated(EnumType.STRING)
+    private PaymentOption payment_option;
+
+    public Order() {}
+    
+	public Order(
+		boolean payed,
+		PaymentOption payment_option,
+		Customer customer
+	) {
+		this.payed = payed;
+		this.payment_option = payment_option;
+		this.customer = customer;
 	}
-	public Order(long total, String deliveryAddress, String paymentOption, boolean isPaid, User user) {
-		this.total = total;
-		this.deliveryAddress = deliveryAddress;
-		this.paymentOption = paymentOption;
-		this.isPaid = isPaid;
-		this.user = user;
+
+	public long getOrder_id() {
+		return order_id;
 	}
-	
-	public long getTotal() {
-		return total;
+
+	public void setOrder_id(long order_id) {
+		this.order_id = order_id;
 	}
-	public void setTotal(long total) {
-		this.total = total;
+
+	public Set<OrderItem> getOrder_items() {
+		return order_items;
 	}
-	public String getDeliveryAddress() {
-		return deliveryAddress;
+
+	public void setOrder_items(Set<OrderItem> order_items) {
+		this.order_items = order_items;
 	}
-	public void setDeliveryAddress(String deliveryAddress) {
-		this.deliveryAddress = deliveryAddress;
+
+	public Customer getCustomer() {
+		return customer;
 	}
-	public String getPaymentOption() {
-		return paymentOption;
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
-	public void setPaymentOption(String paymentOption) {
-		this.paymentOption = paymentOption;
+
+	public boolean isPayed() {
+		return payed;
 	}
-	public boolean isPaid() {
-		return isPaid;
+
+	public void setPayed(boolean payed) {
+		this.payed = payed;
 	}
-	public void setPaid(boolean isPaid) {
-		this.isPaid = isPaid;
+
+	public PaymentOption getPayment_option() {
+		return payment_option;
 	}
-	public long getOrderId() {
-		return orderId;
+
+	public void setPayment_option(PaymentOption payment_option) {
+		this.payment_option = payment_option;
 	}
-	public void setOrderId(long orderId) {
-		this.orderId = orderId;
-	}
-	public User getUser() {
-		return user;
-	}
-	public void setUser(User user) {
-		this.user = user;
-	}
+
 	@Override
 	public String toString() {
-		return "Order [orderId=" + orderId + ", total=" + total + ", deliveryAddress=" + deliveryAddress
-				+ ", paymentOption=" + paymentOption + ", isPaid=" + isPaid + ", user=" + user + "]";
+		return "Order [order_id=" + order_id + ", order_items=" + order_items + ", customer=" + customer + ", payed="
+				+ payed + ", payment_option=" + payment_option + "]";
 	}
 }

@@ -1,6 +1,6 @@
 package com.shopmart.repository;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -13,6 +13,6 @@ import com.shopmart.model.Address;
 public interface AddressRepository extends CrudRepository<Address, Long>{
 	
 	@Query(value = "SELECT * FROM addresses WHERE user_id = :user_id", nativeQuery = true)
-	List<Address> findByUserId(@Param(value = "user_id") long user_id);
+	Set<Address> findByUserId(@Param(value = "user_id") long user_id);
 	
 }

@@ -1,109 +1,67 @@
 package com.shopmart.service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.mail.MessagingException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.shopmart.model.Address;
-import com.shopmart.model.Password;
+import com.shopmart.model.Address.AddressType;
 import com.shopmart.model.User;
 import com.shopmart.repository.AddressRepository;
-import com.shopmart.repository.PasswordRepository;
 import com.shopmart.repository.UserRepository;
-import com.shopmart.util.AuthPassword;
-import com.shopmart.util.Mail;
 
 @Service
 public class UserService implements UserDetailsService {
 
-	@Autowired private UserRepository userRepo;
-	@Autowired private AddressRepository addrRepo;
-	@Autowired private JdbcTemplate jdbc;
-	@Autowired private PasswordRepository pswdRepo;
-	@Autowired private EmailService emailServ;
-	@Autowired private PasswordEncoder bcryptEncoder;
+	@Autowired private UserRepository userRepository;
+	@Autowired private AddressRepository addressRepository;
 	
 	private static Logger log = LoggerFactory.getLogger(UserService.class);
 
 	@Override
-	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-		User user = userRepo.findByUserId(Long.parseLong(userId));
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		System.out.println("[loadUserByUsername] " + username);
+		User user = userRepository.findByUsername(username);
 		if (user == null) {
-			throw new UsernameNotFoundException("User not found: " + userId);
+			throw new UsernameNotFoundException("User not found: " + username);
 		}
 		log.info("Logged -> "+user.toString());
-		return new org.springframework.security.core.userdetails.User(""+user.getUserId(),
-				user.getPassword(), new ArrayList<>());
+		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
 	}
 
-	public Authentication auth() {
-		return SecurityContextHolder.getContext().getAuthentication();
+	public String getUsername() {
+		return SecurityContextHolder.getContext().getAuthentication().getName();
 	}
 	public long getUserId() {
-		return Long.parseLong(auth().getName());
+		return userRepository.getUserIdFromUsername(this.getUsername());
 	}
-	public User save(User user) {
-
-		String email = jdbc.queryForObject("select email from passwords where passwordid = "+user.getUserId()+" limit 1", String.class);
-
-		User newUser = userRepo.save(new User(user.getName(),
-				bcryptEncoder.encode(user.getPassword()),
-				email, user.getContact(), 0, 0
-		));
-		log.info("Signed -> "+newUser.toString());
-		newUser.setPassword(null);
-		return newUser;
+	
+	public void updateEmail(String email) {
+		User user = userRepository.findByUsername(this.getUsername());
+		user.setEmail(email);
+		userRepository.save(user);
 	}
-	public User updateUser(User user) {
-		User upusr = userRepo.findByUserId(user.getUserId());
-		upusr.setContact(user.getContact());
-		upusr.setEmail(user.getEmail());
-		upusr.setName(user.getName());
-		userRepo.save(upusr);
-		log.info("Updated -> "+upusr.toString());
-		return upusr;
-	}
-	public User getUser() {
-		User user = userRepo.findByUserId(this.getUserId());
-		user.setPassword(null);
-		return user;
-	}
-	public List<Address> getAddresses(){
-		return addrRepo.findByUserId(this.getUserId());
-	}
-
-	public boolean setPassword(AuthPassword pswd) {
-		Password pswd2 = pswdRepo.findByPasswordId(pswd.passwordid);
-		if(pswd2 == null) {
-			return false;
-		}
-		else {
-			User user = userRepo.findByEmail(pswd2.getEmail());
-			if(user == null) {
-				return false;
-			}
-			else {
-				user.setPassword(bcryptEncoder.encode(pswd.password));
-				userRepo.save(user);
-				log.info("Password Set -> "+user.toString());
-				return true;
+	
+	public void addAddress(Address address) {
+		User user = userRepository.findByUsername(this.getUsername());
+		if(address.getAddress_type() == AddressType.HOME) {
+			for (Address addressI: user.getAddresses()) {
+				addressI.setAddress_type(AddressType.UNKNOWN);
 			}
 		}
+		if(address.getAddress_type() == AddressType.OFFICE) {
+			for (Address addressI: user.getAddresses()) {
+				addressI.setAddress_type(AddressType.UNKNOWN);
+			}
+		}
+		address.setUser(user);
+		addressRepository.save(address);
 	}
 }

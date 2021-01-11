@@ -1,7 +1,5 @@
 package com.shopmart.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -24,7 +22,7 @@ public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "address_id")
-	private long addressId;
+	private long address_id;
 	@Column(name = "line_one") @NotNull
 	private String line_one;
 	@Column(name = "line_two")
@@ -38,30 +36,39 @@ public class Address {
 	@Column(name = "pincode", length = 6) @NotNull
 	private String pincode;
 	
+	public enum AddressType {
+		HOME, OFFICE, UNKNOWN;
+	}
+	
+	@Column(name = "address_type") @NotNull
+	@Enumerated(EnumType.STRING)
+	private AddressType address_type;
+	
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
 
 	public Address() { }
-	
+
 	public Address(String line_one, String line_two, String line_three, String city, String state,
-			String pincode, User user) {
+			String pincode, AddressType address_type, User user) {
 		this.line_one = line_one;
 		this.line_two = line_two;
 		this.line_three = line_three;
 		this.city = city;
 		this.state = state;
 		this.pincode = pincode;
+		this.address_type = address_type;
 		this.user = user;
 	}
 
-	public long getAddressId() {
-		return addressId;
+	public long getAddress_id() {
+		return address_id;
 	}
 
-	public void setAddressId(long addressId) {
-		this.addressId = addressId;
+	public void setAddress_id(long address_id) {
+		this.address_id = address_id;
 	}
 
 	public String getLine_one() {
@@ -111,7 +118,15 @@ public class Address {
 	public void setPincode(String pincode) {
 		this.pincode = pincode;
 	}
-	
+
+	public AddressType getAddress_type() {
+		return address_type;
+	}
+
+	public void setAddress_type(AddressType address_type) {
+		this.address_type = address_type;
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -120,10 +135,4 @@ public class Address {
 		this.user = user;
 	}
 
-	@Override
-	public String toString() {
-		return "Address [address_id=" + addressId + ", line_one=" + line_one + ", line_two=" + line_two + ", line_three="
-				+ line_three + ", city=" + city + ", state=" + state + ", pincode=" + pincode
-				+ "]";
-	}	
 }

@@ -21,11 +21,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Review {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="reviewId")
-	private long reviewId;
+	@Column(name="review_id")
+	private long review_id;
 
 	@Column(name = "product_id")
-	private String productId;
+	private String product_id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -36,37 +36,40 @@ public class Review {
 	private long reply_to;
 	
 	@Column(name = "review_txt")
-	private String reviewText;
+	private String review_txt;
 	
 	@Column(name = "date_created")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dateCreated;
+	private Date date_created;
 
 	public Review() { }
-	
-	public Review(String productId, long reply_to, String reviewText,
-			Date dateCreated, User user) {
-		this.productId = productId;
-		this.reply_to = reply_to;
-		this.reviewText = reviewText;
-		this.dateCreated = dateCreated;
+
+	public Review(
+		String product_id, long reply_to,
+		String review_txt, Date date_created,
+		User user
+	) {
+		this.product_id = product_id;
 		this.user = user;
+		this.reply_to = reply_to;
+		this.review_txt = review_txt;
+		this.date_created = date_created;
 	}
 
-	public long getReviewId() {
-		return reviewId;
+	public long getReview_id() {
+		return review_id;
 	}
 
-	public void setReviewId(long reviewId) {
-		this.reviewId = reviewId;
+	public void setReview_id(long review_id) {
+		this.review_id = review_id;
 	}
 
-	public String getProductId() {
-		return productId;
+	public String getProduct_id() {
+		return product_id;
 	}
 
-	public void setProductId(String productId) {
-		this.productId = productId;
+	public void setProduct_id(String product_id) {
+		this.product_id = product_id;
 	}
 
 	public User getUser() {
@@ -85,26 +88,19 @@ public class Review {
 		this.reply_to = reply_to;
 	}
 
-	public String getReviewText() {
-		return reviewText;
+	public String getReview_txt() {
+		return review_txt;
 	}
 
-	public void setReviewText(String reviewText) {
-		this.reviewText = reviewText;
+	public void setReview_txt(String review_txt) {
+		this.review_txt = review_txt;
 	}
 
-	public Date getDateCreated() {
-		return dateCreated;
+	public Date getDate_created() {
+		return date_created;
 	}
 
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
+	public void setDate_created(Date date_created) {
+		this.date_created = date_created;
 	}
-
-	@Override
-	public String toString() {
-		return "Review [reviewId=" + reviewId + ", productId=" + productId + ", user=" + user + ", reply_to=" + reply_to
-				+ ", reviewText=" + reviewText + ", dateCreated=" + dateCreated + "]";
-	}
-
 }

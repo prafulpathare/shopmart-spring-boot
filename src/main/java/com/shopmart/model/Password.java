@@ -16,27 +16,36 @@ public class Password {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int passwordid;
+	@Column(name = "password_id")
+	private int passwordId;
 	
-	@Column(name = "email")
-	@NotNull
+	@Column(name = "email")	@NotNull
 	private String email;
 
-	public Password() {
-	}
+	public Password() {}
+	
 	public Password(String email) {
 		this.email = email;
 	}
-	public Integer getPasswordid() {
-		return passwordid;
+
+	public int getPasswordId() {
+		return passwordId;
 	}
-	public void setPasswordid(Integer passwordid) {
-		this.passwordid = passwordid;
+
+	public void setPasswordId(int passwordId) {
+		this.passwordId = passwordId;
 	}
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Override
+	public String toString() {
+		return "Password [passwordId=" + passwordId + ", email=" + email + "]";
 	}
 }
