@@ -10,10 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.shopmart.model.Address;
-import com.shopmart.model.Address.AddressType;
 import com.shopmart.model.User;
 import com.shopmart.repository.AddressRepository;
 import com.shopmart.repository.UserRepository;
@@ -21,7 +20,8 @@ import com.shopmart.repository.UserRepository;
 @Service
 public class UserService implements UserDetailsService {
 
-	@Autowired private JdbcTemplate jdbc;
+	@Autowired public JdbcTemplate jdbc;
+	@Autowired public PasswordEncoder bcryPasswordEncoder;
 	@Autowired private UserRepository userRepository;
 	@Autowired private AddressRepository addressRepository;
 	
@@ -51,5 +51,9 @@ public class UserService implements UserDetailsService {
 		User user = userRepository.findByUsername(this.getUsername());
 		user.setEmail(email);
 		userRepository.save(user);
+	}
+	
+	public boolean emailExists(String email) {
+		return jdbc.queryForObject("select count(email) from shopmart.users where email = ?", new Object[] {email}, Integer.class) == 0 ? false : true;
 	}
 }

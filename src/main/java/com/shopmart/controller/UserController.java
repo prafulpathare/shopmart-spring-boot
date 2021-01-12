@@ -34,7 +34,7 @@ import com.shopmart.service.UserService;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(value = "/user")
-public class AuthController {
+public class UserController {
 
 	@Autowired private AuthenticationManager authenticationManager;
 	@Autowired private JwtTokenUtil jwtTokenUtil;
@@ -44,7 +44,7 @@ public class AuthController {
 	@Autowired private UserService userService;
 	@Autowired private PasswordEncoder bcryptEncoder;
 	@Autowired private JdbcTemplate jdbc;	
-	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@PostMapping(value = "/authenticate")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
@@ -57,28 +57,6 @@ public class AuthController {
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
-
-	@PostMapping(value = "/register")
-	public ResponseEntity<?> saveCustomer(@RequestBody RegisterRequest req) throws Exception {
-		if(userRepository.findByEmail(req.getEmail()) != null) return ResponseEntity.status(HttpStatus.FOUND).body("EMAIL_EXISTS");
-		Password password = passwordRepository.findByIdAndEmail(req.getToken(), req.getEmail());
-		if(password == null) return ResponseEntity.status(HttpStatus.FOUND).body("INVALID_TOKEN");
-		req.setEmail(password.getEmail());
-		
-		User user = userRepository.save(new Customer(
-			req.getName(), bcryptEncoder.encode(req.getPassword()),
-			req.getEmail(), req.getContact(), false, 1
-		));
-
-		passwordRepository.delete(password);
-		return ResponseEntity.ok(user);
-	}
-
-	@PostMapping(value = "/update")
-	public ResponseEntity<?> updateUser(@RequestBody User user) {
-		return ResponseEntity.status(200).body(null);
-	}
-	
 
 	private void authenticate(String username, String password) throws Exception {
 		try {

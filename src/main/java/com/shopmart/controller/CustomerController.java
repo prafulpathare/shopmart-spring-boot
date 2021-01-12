@@ -3,16 +3,21 @@ package com.shopmart.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shopmart.model.Order;
+import com.shopmart.dto.RegisterRequest;
+import com.shopmart.model.Customer;
+import com.shopmart.model.Password;
+import com.shopmart.model.User;
+import com.shopmart.repository.PasswordRepository;
 import com.shopmart.service.CustomerService;
 
 @RestController
@@ -21,11 +26,35 @@ import com.shopmart.service.CustomerService;
 public class CustomerController {
 
 	@Autowired private CustomerService customerService;
+	@Autowired private PasswordRepository passwordRepository;
 	private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
-	@GetMapping(value = "")
+	@GetMapping
 	public ResponseEntity<?> getCustomer() {
 		return ResponseEntity.ok(customerService.getCustomer());
 	}
+	
+	@PutMapping
+	public ResponseEntity<?> updateUser(@RequestBody User user) {
+		return ResponseEntity.status(200).body(null);
+	}
+	
+	@PostMapping(value = "/register")
+	public ResponseEntity<?> saveCustomer(@RequestBody RegisterRequest req) throws Exception {
+		
+		if(customerService.userService.emailExists(req.getEmail()))  return ResponseEntity.status(HttpStatus.FOUND).body("EMAIL_EXISTS");
+		
+		Password password = passwordRepository.findByIdAndEmail(req.getToken(), req.getEmail());
+		if(password == null) return ResponseEntity.status(HttpStatus.FOUND).body("INVALID_TOKEN");
+		req.setEmail(password.getEmail());
+		
+		customerService.create(new Customer(
+			req.getName(), req.getPassword(), req.getEmail(), req.getContact(), false, 1
+		));
+
+		passwordRepository.delete(password);
+		return ResponseEntity.status(200).body(null);
+	}
+
 	
 }
