@@ -18,7 +18,6 @@ import com.shopmart.model.Password;
 import com.shopmart.repository.PasswordRepository;
 import com.shopmart.repository.UserRepository;
 import com.shopmart.service.EmailService;
-import com.shopmart.service.PasswordService;
 import com.shopmart.util.Mail;
 
 @RestController
@@ -29,7 +28,6 @@ public class UtilController {
 	@Autowired private UserRepository userRepository;
 	@Autowired private PasswordRepository passwordRepository;
 	@Autowired private EmailService emailService;
-	@Autowired private PasswordService passwordService;
 	@Autowired private JdbcTemplate jdbc;
 	private static final Logger logger = LoggerFactory.getLogger(UtilController.class);
 

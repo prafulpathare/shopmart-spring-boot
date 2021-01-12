@@ -1,5 +1,7 @@
 package com.shopmart.model;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,7 +16,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
@@ -30,14 +35,28 @@ public class Order {
 	
     @OneToMany(mappedBy="order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<OrderItem> order_items;
-    
+
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     @JsonIgnore
     private Customer customer;
+	
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
     
     @Column(name = "payed")
     private boolean payed = false;
+
+    @Column(name = "date_created")
+	@Temporal(TemporalType.TIMESTAMP)
+    private Date date_created;
+    
+    @Column(name = "delivery_date")
+	@Temporal(TemporalType.TIMESTAMP)
+    private Date delivery_date;
+    
+    
     
     public enum PaymentOption {
     	MASTERCARD, PAYPAL, BANK_TRANSFER, CASH_ON_DELIVERY;
@@ -52,11 +71,15 @@ public class Order {
 	public Order(
 		boolean payed,
 		PaymentOption payment_option,
-		Customer customer
+		Customer customer,
+		Address address,
+		Date date_created
 	) {
 		this.payed = payed;
 		this.payment_option = payment_option;
 		this.customer = customer;
+		this.address = address;
+		this.date_created = date_created;
 	}
 
 	public long getOrder_id() {
@@ -97,6 +120,30 @@ public class Order {
 
 	public void setPayment_option(PaymentOption payment_option) {
 		this.payment_option = payment_option;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	public Date getDate_created() {
+		return date_created;
+	}
+
+	public void setDate_created(Date date_created) {
+		this.date_created = date_created;
+	}
+
+	public Date getDelivery_date() {
+		return delivery_date;
+	}
+
+	public void setDelivery_date() {
+		this.delivery_date = new Date(this.date_created.getTime() + 8*24*60*60*1000); 
 	}
 
 	@Override

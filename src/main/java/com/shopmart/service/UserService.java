@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,6 +21,7 @@ import com.shopmart.repository.UserRepository;
 @Service
 public class UserService implements UserDetailsService {
 
+	@Autowired private JdbcTemplate jdbc;
 	@Autowired private UserRepository userRepository;
 	@Autowired private AddressRepository addressRepository;
 	
@@ -42,26 +44,12 @@ public class UserService implements UserDetailsService {
 	public long getUserId() {
 		return userRepository.getUserIdFromUsername(this.getUsername());
 	}
-	
-	public void updateEmail(String email) {
+	public User get() {
+		return userRepository.findByUsername(this.getUsername());
+	}
+	public void setEmail(String email) {
 		User user = userRepository.findByUsername(this.getUsername());
 		user.setEmail(email);
 		userRepository.save(user);
-	}
-	
-	public void addAddress(Address address) {
-		User user = userRepository.findByUsername(this.getUsername());
-		if(address.getAddress_type() == AddressType.HOME) {
-			for (Address addressI: user.getAddresses()) {
-				addressI.setAddress_type(AddressType.UNKNOWN);
-			}
-		}
-		if(address.getAddress_type() == AddressType.OFFICE) {
-			for (Address addressI: user.getAddresses()) {
-				addressI.setAddress_type(AddressType.UNKNOWN);
-			}
-		}
-		address.setUser(user);
-		addressRepository.save(address);
 	}
 }

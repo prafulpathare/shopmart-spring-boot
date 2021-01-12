@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,13 +27,5 @@ public class CustomerController {
 	public ResponseEntity<?> getCustomer() {
 		return ResponseEntity.ok(customerService.getCustomer());
 	}
-	
-	@PostMapping(value = "/order")
-	public ResponseEntity<?> addOrders(@RequestBody Order order) {
-		System.out.println(order.toString());
-		customerService.addOrder(order);
-		return ResponseEntity.status(200).body(null);
-	}
-	
 	
 }

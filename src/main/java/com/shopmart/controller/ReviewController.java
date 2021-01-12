@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,19 +21,24 @@ import com.shopmart.service.ReviewService;
 @RequestMapping(value = "/review")
 public class ReviewController {
 
-	@Autowired private ReviewService reviewServ;
+	@Autowired private ReviewService reviewService;
 	private static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
 	
 	@GetMapping(value = "/{productid}")
-	public ResponseEntity<?> getReviewByProduct(@PathVariable(name="productid") String productid){
+	public ResponseEntity<?> getReview(@PathVariable(name="productid") String productid){
+		return ResponseEntity.status(200).body(
+			reviewService.get(productid)
+		);
+	}
+	@DeleteMapping(value = "/{productid}")
+	public ResponseEntity<?> deleteReview(@PathVariable(name="productid") String productid){
+		reviewService.delete(productid);
 		return ResponseEntity.status(200).body(null);
 	}
 	@PostMapping(value = "")
-	public ResponseEntity<?> addReview(@RequestBody Review review){
-		return ResponseEntity.status(200).body(null);
-	}
-	@PostMapping(value = "/reply/add")
-	public ResponseEntity<?> addReply(@RequestBody Review review){
-		return ResponseEntity.status(200).body(null);
-	}
+    public ResponseEntity<?> updateUser(@RequestBody Review review) {
+        reviewService.create(review);
+        return ResponseEntity.status(200).body(null);
+    }
+	
 }

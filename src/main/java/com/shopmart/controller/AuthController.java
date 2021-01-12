@@ -26,26 +26,22 @@ import com.shopmart.model.Address;
 import com.shopmart.model.Customer;
 import com.shopmart.model.Password;
 import com.shopmart.model.User;
-import com.shopmart.repository.AddressRepository;
 import com.shopmart.repository.PasswordRepository;
 import com.shopmart.repository.UserRepository;
 import com.shopmart.service.EmailService;
-import com.shopmart.service.PasswordService;
 import com.shopmart.service.UserService;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping(value = "/auth")
+@RequestMapping(value = "/user")
 public class AuthController {
 
 	@Autowired private AuthenticationManager authenticationManager;
 	@Autowired private JwtTokenUtil jwtTokenUtil;
 	@Autowired private UserRepository userRepository;
-	@Autowired private AddressRepository addressRepository;
 	@Autowired private PasswordRepository passwordRepository;
 	@Autowired private EmailService emailService;
 	@Autowired private UserService userService;
-	@Autowired private PasswordService passwordService;
 	@Autowired private PasswordEncoder bcryptEncoder;
 	@Autowired private JdbcTemplate jdbc;	
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -83,12 +79,7 @@ public class AuthController {
 		return ResponseEntity.status(200).body(null);
 	}
 	
-	@PostMapping(value = "/address")
-	public ResponseEntity<?> updateUser(@RequestBody Address address) {
-		userService.addAddress(address);
-		return ResponseEntity.status(200).body(null);
-	}
-	
+
 	private void authenticate(String username, String password) throws Exception {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

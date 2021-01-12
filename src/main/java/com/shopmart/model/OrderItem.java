@@ -1,5 +1,7 @@
 package com.shopmart.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,8 +35,8 @@ public class OrderItem {
 	@Column(name = "total") @NotNull
 	private double total;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "order_id", nullable = true)
     @JsonIgnore
 	private Order order;
 	

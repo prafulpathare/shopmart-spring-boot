@@ -1,5 +1,8 @@
 package com.shopmart.model;
 
+import java.io.Serializable;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,7 +41,7 @@ public class Address {
 	private String pincode;
 	
 	public enum AddressType {
-		HOME, OFFICE, UNKNOWN;
+		HOME, OFFICE, UNKNOWN, DELIVERY;
 	}
 	
 	@Column(name = "address_type") @NotNull
@@ -48,6 +52,12 @@ public class Address {
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
+    
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade =  CascadeType.ALL,
+            mappedBy = "address")
+    @JsonIgnore
+    private Order order;
 
 	public Address() { }
 
@@ -133,6 +143,14 @@ public class Address {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
 }

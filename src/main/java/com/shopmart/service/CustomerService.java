@@ -20,15 +20,4 @@ public class CustomerService {
 	public Customer getCustomer() {
 		return customerRepository.findByUsername(userService.getUsername());
 	}
-
-	public void addOrder(Order order) {
-		if(order.getOrder_items() == null || order.getOrder_items().size() < 1) return;
-		Customer customer = customerRepository.findByUsername(userService.getUsername());
-		Order o = orderRepository.save(new Order(order.isPayed(), order.getPayment_option(), customer));
-		for(OrderItem item : order.getOrder_items()) {
-			item.setTotal(Math.round(item.getPrice() * item.getQuantity() * 100.0)/100.0);
-			item.setOrder(o);
-			orderItemRepository.save(item);
-		}
-	}
 }

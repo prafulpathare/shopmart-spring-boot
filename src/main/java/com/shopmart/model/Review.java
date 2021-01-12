@@ -1,5 +1,6 @@
 package com.shopmart.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
 
 @Entity
 @Table(name = "reviews")
@@ -24,7 +26,7 @@ public class Review {
 	@Column(name="review_id")
 	private long review_id;
 
-	@Column(name = "product_id")
+	@Column(name = "product_id") @NotNull
 	private String product_id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -35,7 +37,7 @@ public class Review {
 	@Column(name = "reply_to")
 	private long reply_to;
 	
-	@Column(name = "review_txt")
+	@Column(name = "review_txt") @NotNull
 	private String review_txt;
 	
 	@Column(name = "date_created")

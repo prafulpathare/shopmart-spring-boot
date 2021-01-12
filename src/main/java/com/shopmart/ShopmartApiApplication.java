@@ -54,9 +54,5 @@ public class ShopmartApiApplication implements CommandLineRunner  {
     public void run(String[] args) throws Exception {
 
 		log.info("Application Started");
-		
-		Supplier s = repository.save(new Supplier("vardahn sahani", "NaN", "sahanivardhan@gmail.com","8741258745", true, 1, SupplierType.BUSSINESS, "7412587896", "753159852456197"));
-		productRepository.save(new Product(530665656565885L, s));
-				
-    }
+	}
 }
