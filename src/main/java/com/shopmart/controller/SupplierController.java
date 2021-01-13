@@ -21,6 +21,6 @@ public class SupplierController {
 
 	@GetMapping(value = "")
 	public ResponseEntity<?> getSupplier() {
-		return ResponseEntity.ok(supplierService.getSupplier());
+		return ResponseEntity.ok(supplierService.get());
 	}
 }

@@ -9,10 +9,10 @@ import com.shopmart.repository.SupplierRepository;
 
 @Service
 public class SupplierService {
-	@Autowired private UserService userService;
+	@Autowired public UserService userService;
 	@Autowired private SupplierRepository supplierRepository;
 	
-	public Supplier getSupplier() {
+	public Supplier get() {
 		return supplierRepository.findByUsername(userService.getUsername());
 	}
 }

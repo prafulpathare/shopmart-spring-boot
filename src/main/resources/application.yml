@@ -1,6 +1,11 @@
 jwt:
   secret: authjwt
+
 spring:
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 3MB        
   admin:
     email: patharepraful@gmail.com
   datasource:

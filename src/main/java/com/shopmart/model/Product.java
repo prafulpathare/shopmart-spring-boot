@@ -1,12 +1,8 @@
 package com.shopmart.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,7 +16,7 @@ public class Product {
 		
 	@Id
 	@Column(name = "product_id")
-	private long product_id;
+	private String product_id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -29,16 +25,16 @@ public class Product {
 	
 	public Product() {}
 	
-	public Product(long product_id, Supplier supplier) {
+	public Product(String product_id, Supplier supplier) {
 		this.product_id = product_id;
 		this.supplier = supplier;
 	}
 
-	public long getProduct_id() {
+	public String getProduct_id() {
 		return product_id;
 	}
 
-	public void setProduct_id(long product_id) {
+	public void setProduct_id(String product_id) {
 		this.product_id = product_id;
 	}
 
