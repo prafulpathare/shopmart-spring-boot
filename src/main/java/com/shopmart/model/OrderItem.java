@@ -1,12 +1,8 @@
 package com.shopmart.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,9 +15,8 @@ import com.sun.istack.NotNull;
 @Table(name = "order_items")
 public class OrderItem {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "order_item_id")
-	private long order_item_id;
+	private String order_item_id;
 	
 	@Column(name = "name") @NotNull
 	private String name;
@@ -42,7 +37,8 @@ public class OrderItem {
 	
 	public OrderItem() { }
 	
-	public OrderItem(String name, double price, int quantity, Order order) {
+	public OrderItem(String order_item_id, String name, double price, int quantity, Order order) {
+		this.order_item_id = order_item_id;
 		this.name = name;
 		this.price = price;
 		this.quantity = quantity;
@@ -88,6 +84,14 @@ public class OrderItem {
 
 	public void setOrder(Order order) {
 		this.order = order;
+	}
+
+	public String getOrder_item_id() {
+		return order_item_id;
+	}
+
+	public void setOrder_item_id(String order_item_id) {
+		this.order_item_id = order_item_id;
 	}
 
 	@Override

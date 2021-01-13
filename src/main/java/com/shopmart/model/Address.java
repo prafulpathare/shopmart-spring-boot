@@ -41,7 +41,7 @@ public class Address {
 	private String pincode;
 	
 	public enum AddressType {
-		HOME, OFFICE, UNKNOWN, DELIVERY;
+		HOME, OFFICE, UNKNOWN;
 	}
 	
 	@Column(name = "address_type") @NotNull

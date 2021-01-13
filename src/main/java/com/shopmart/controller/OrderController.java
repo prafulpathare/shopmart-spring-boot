@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +29,9 @@ public class OrderController {
 		orderService.create(order);
 		return ResponseEntity.status(200).body(null);
 	}
-	@DeleteMapping(value = "")
-	public ResponseEntity<?> deleteOrders(@RequestBody Order order) {
-		orderService.delete(order.getOrder_id());
+	@DeleteMapping(value = "/{orderId}")
+	public ResponseEntity<?> deleteOrder(@PathVariable Long orderId) {
+		orderService.delete(orderId);
 		return ResponseEntity.status(200).body(null);
 	}
 	

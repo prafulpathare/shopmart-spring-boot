@@ -33,7 +33,7 @@ public class Order {
 	@Column(name = "order_id")
 	private long order_id;
 	
-    @OneToMany(mappedBy="order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="order", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<OrderItem> order_items;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -44,9 +44,12 @@ public class Order {
     @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
-    
+
     @Column(name = "payed")
     private boolean payed = false;
+    
+    @Column(name = "total")
+    private double total = 0.0;
 
     @Column(name = "date_created")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -144,6 +147,14 @@ public class Order {
 
 	public void setDelivery_date() {
 		this.delivery_date = new Date(this.date_created.getTime() + 8*24*60*60*1000); 
+	}
+	
+	public double getTotal() {
+		return total;
+	}
+
+	public void setTotal(double total) {
+		this.total = total;
 	}
 
 	@Override
