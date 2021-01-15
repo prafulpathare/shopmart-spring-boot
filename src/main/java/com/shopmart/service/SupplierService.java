@@ -15,4 +15,14 @@ public class SupplierService {
 	public Supplier get() {
 		return supplierRepository.findByUsername(userService.getUsername());
 	}
+	public Supplier getFromEmail(String email) {
+		return supplierRepository.findByEmail(email);
+	}
+	
+
+	public void create(Supplier supplier) {
+		supplier.setPassword(userService.bcryPasswordEncoder.encode(supplier.getPassword()));
+		supplierRepository.save(supplier);
+	}
+	
 }

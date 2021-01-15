@@ -5,18 +5,17 @@ import org.springframework.stereotype.Service;
 
 import com.shopmart.model.Customer;
 import com.shopmart.repository.CustomerRepository;
-import com.shopmart.repository.OrderItemRepository;
-import com.shopmart.repository.OrderRepository;
 
 @Service
 public class CustomerService {
 	@Autowired public UserService userService;
 	@Autowired public CustomerRepository customerRepository;
-	@Autowired private OrderRepository orderRepository;
-	@Autowired private OrderItemRepository orderItemRepository;
-	
-	public Customer getCustomer() {
+
+	public Customer get() {
 		return customerRepository.findByUsername(userService.getUsername());
+	}
+	public Customer getFromEmail(String email) {
+		return customerRepository.findByEmail(email);
 	}
 	
 	public void create(Customer customer) {

@@ -25,18 +25,20 @@ public class ReviewController {
 	private static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
 	
 	@GetMapping(value = "/{productid}")
-	public ResponseEntity<?> getReview(@PathVariable(name="productid") String productid){
+	public ResponseEntity<?> get(@PathVariable(name="productid") String productid){
 		return ResponseEntity.status(200).body(
 			reviewService.get(productid)
 		);
 	}
+	
 	@DeleteMapping(value = "/{productid}")
-	public ResponseEntity<?> deleteReview(@PathVariable(name="productid") String productid){
+	public ResponseEntity<?> delete(@PathVariable(name="productid") String productid){
 		reviewService.delete(productid);
 		return ResponseEntity.status(200).body(null);
 	}
+	
 	@PostMapping(value = "")
-    public ResponseEntity<?> updateUser(@RequestBody Review review) {
+    public ResponseEntity<?> create(@RequestBody Review review) {
         reviewService.create(review);
         return ResponseEntity.status(200).body(null);
     }

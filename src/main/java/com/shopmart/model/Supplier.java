@@ -1,6 +1,5 @@
 package com.shopmart.model;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -18,9 +17,6 @@ import com.sun.istack.NotNull;
 @Table(name = "suppliers")
 public class Supplier extends User {
 
-//    @OneToMany(mappedBy="retailer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private Set<Order> orders;
-
     @OneToMany(mappedBy="supplier", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Product> products; 
 	
@@ -28,35 +24,63 @@ public class Supplier extends User {
 		INDIVIDUAL, BUSSINESS
 	}
 	
-	@Column
+	@Column(name = "supplier_type")
 	@Enumerated(EnumType.STRING)
-	private SupplierType supplierType;
+	private SupplierType supplier_type;
+
+	@Column(name = "business_name") @NotNull
+	private String business_name;
 
 	@Column(length = 10) @NotNull
-	private String pan;	
+	private String pan;
+	
+	@Column(name = "is_verified") @NotNull
+	private boolean is_verified;
 
 	@Column(length = 15) @NotNull
 	private String gst;
 
 	public Supplier() {}
 	
-	public Supplier(
-		String name, String password, String email, String contact, boolean is_profile, int status,
-		SupplierType supplierType,
-		String pan, String gst
-	) {
+	public Supplier(String name, String business_name, String password, String email, boolean is_verified, String contact, boolean is_profile, int status, SupplierType supplierType, String pan, String gst) {
 		super(name, password, email, contact, is_profile, status);
-		this.supplierType = supplierType;
+		this.supplier_type = supplier_type;
+		this.business_name = business_name;
 		this.gst = gst;
 		this.pan = pan;
+		this.is_verified = is_verified;
+	}
+	
+	public String getBusiness_name() {
+		return business_name;
 	}
 
-	public SupplierType getSupplierType() {
-		return supplierType;
+	public void setBusiness_name(String business_name) {
+		this.business_name = business_name;
 	}
 
-	public void setSupplierType(SupplierType supplierType) {
-		this.supplierType = supplierType;
+	public boolean isIs_verified() {
+		return is_verified;
+	}
+
+	public void setIs_verified(boolean is_verified) {
+		this.is_verified = is_verified;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+
+	public SupplierType getSupplier_type() {
+		return supplier_type;
+	}
+
+	public void setSupplier_type(SupplierType supplier_type) {
+		this.supplier_type = supplier_type;
 	}
 
 	public String getPan() {

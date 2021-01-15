@@ -16,6 +16,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 @Entity
@@ -35,6 +36,7 @@ public class User {
 	
 	@Column(name = "password")
 	@NotNull
+	@JsonIgnore
 	private String password;
 	
 	@Column(name = "email", unique = true)

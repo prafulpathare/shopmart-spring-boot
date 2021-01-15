@@ -1,6 +1,6 @@
 package com.shopmart.dto;
 
-public class RegisterRequest {
+abstract class RegisterRequest {
 
 	private String email, password, contact, name;
 	private long token;
