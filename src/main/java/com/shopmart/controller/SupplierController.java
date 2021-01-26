@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +36,11 @@ public class SupplierController {
 	@Autowired private JwtTokenUtil jwtTokenUtil;
 	private static final Logger logger = LoggerFactory.getLogger(SupplierController.class);
 
+	@GetMapping(value = "")
+	public ResponseEntity<?> getSupplier() {
+		return ResponseEntity.ok(supplierService.get());
+	}
+	
 	@PostMapping(value = "/register")
 	public ResponseEntity<?> saveCustomer(@RequestBody SupplierRegisterRequest req) throws Exception {
 		
@@ -56,6 +63,7 @@ public class SupplierController {
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest req) throws Exception {
 		
 		Supplier supplier = supplierService.getFromEmail(req.getEmail());
+		System.out.println(supplier.toString());
 		if(supplier == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 				
 		supplierService.userService.authenticate(supplier.getUsername(), req.getPassword());
@@ -64,9 +72,37 @@ public class SupplierController {
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
+	@PutMapping(value = "/business-name")
+	public ResponseEntity<?> updateBusinessName(@RequestBody String businessName) {
+		supplierService.userService.jdbc.update("update shopmart.suppliers set business_name = ? where username = ?", new Object[] {businessName, supplierService.userService.getUsername()});
+		return ResponseEntity.status(200).body(null);
+	}
 	
-	@GetMapping(value = "")
-	public ResponseEntity<?> getSupplier() {
-		return ResponseEntity.ok(supplierService.get());
+	@PutMapping(value = "/supplier-type")
+	public ResponseEntity<?> updateSupplierType(@RequestBody String supplierType) {
+		if(supplierType.equals("BUSINESS") || supplierType.equals("INDIVIDUAL")) {			
+			supplierService.userService.jdbc.update("update shopmart.suppliers set business_name = ? where username = ?", new Object[] {supplierType, supplierService.userService.getUsername()});
+			return ResponseEntity.status(200).body(null);
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);		
+	}
+	
+	@PutMapping(value = "/gst")
+	public ResponseEntity<?> updateGST(@RequestBody String gst) {
+		supplierService.userService.jdbc.update("update shopmart.suppliers set gst = ? where username = ?", new Object[] {gst, supplierService.userService.getUsername()});
+		return ResponseEntity.status(200).body(null);
+	}
+
+	@PutMapping(value = "/pan")
+	public ResponseEntity<?> updatePAN(@RequestBody String pan) {
+		supplierService.userService.jdbc.update("update shopmart.suppliers set pan = ? where username = ?", new Object[] {pan, supplierService.userService.getUsername()});
+		return ResponseEntity.status(200).body(null);
+	}
+
+	// can accessed by admin
+	@GetMapping(value = "/approve/{supplierId}")
+	public ResponseEntity<?> approveSupplier(@PathVariable long supplierId) {
+		supplierService.userService.jdbc.update("update shopmart.suppliers set is_verified = ? where user_id = ?", new Object[] {true, supplierId});
+		return ResponseEntity.status(200).body(null);
 	}
 }

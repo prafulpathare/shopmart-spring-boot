@@ -3,6 +3,7 @@ package com.shopmart;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -49,7 +50,8 @@ public class ShopmartApiApplication implements CommandLineRunner  {
     public void run(String[] args) throws Exception {
 
 		log.info("Application Started");
-//		String[] products = {"5f99305bdf0a8e44f2909dab","5f9932addf0a8e44f2909dac","5f9932addf0a8e44f2909dad","5f9932addf0a8e44f2909dae","5f9932addf0a8e44f2909daf","5f9932addf0a8e44f2909db0","5f9933f0df0a8e44f2909db1","5f9933f0df0a8e44f2909db2","5f9933f0df0a8e44f2909db3","5f9933f0df0a8e44f2909db4", "5f9b2a418984f521f37f622b"};
+		
+//		List<String> products = jdbc.queryForList("select product_id from products", String.class);
 //		
 //		double pin;
 //		

@@ -39,10 +39,6 @@ public class CustomerController {
 		return ResponseEntity.ok(customerService.get());
 	}
 	
-	@PutMapping
-	public ResponseEntity<?> updateUser(@RequestBody User user) {
-		return ResponseEntity.status(200).body(null);
-	}
 	@PostMapping(value = "/authenticate")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest req) throws Exception {
 		

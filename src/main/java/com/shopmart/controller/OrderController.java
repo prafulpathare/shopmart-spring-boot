@@ -23,7 +23,6 @@ public class OrderController {
 	@Autowired private OrderService orderService;
 	private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
-
 	@PostMapping(value = "")
 	public ResponseEntity<?> createOrder(@RequestBody Order order) {
 		orderService.create(order);

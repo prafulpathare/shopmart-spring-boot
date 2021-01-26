@@ -58,11 +58,6 @@ public class UserService implements UserDetailsService {
 	public User get() {
 		return userRepository.findByUsername(this.getUsername());
 	}
-	public void setEmail(String email) {
-		User user = userRepository.findByUsername(this.getUsername());
-		user.setEmail(email);
-		userRepository.save(user);
-	}
 	
 	public boolean emailExists(String email) {
 		return jdbc.queryForObject("select count(email) from shopmart.users where email = ?", new Object[] {email}, Integer.class) == 0 ? false : true;

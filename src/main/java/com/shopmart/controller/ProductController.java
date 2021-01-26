@@ -4,6 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,12 +50,6 @@ public class ProductController {
 	@Autowired private SupplierService supplierService;
 	@Autowired private com.shopmart.config.MongoConfig mongoConfig;
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
-
-	@GetMapping(value = "/approve/{product_id}")
-	public ResponseEntity<?> approve(@PathVariable(name = "product_id") String productId){
-	      mongoConfig.productCollection().updateOne(Filters.eq("_id", new ObjectId(productId)), Updates.set("is_approved", true));
-	      return ResponseEntity.status(200).body(null);
-	}
 
 	@PostMapping(value = "")
 	public ResponseEntity<?> createProduct(
@@ -93,16 +90,14 @@ public class ProductController {
         	
         	List<String> imgurls = new ArrayList<>();
 
-            System.out.println("1");
             for (MultipartFile file : files) {
-
-                System.out.println("4");
-            	String fileName =  UUID.randomUUID().toString().replaceAll("-", "") + ".jpg";
+            	int extn = file.getOriginalFilename().lastIndexOf(".");
+            	
+            	String fileName =  UUID.randomUUID().toString().replaceAll("-", "") + file.getOriginalFilename().substring(extn);
             	Path copyLocation = Paths.get(dir + "/" + fileName);				
             	Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
 
-                System.out.println("7");
-            	imgurls.add(dir + "/" + fileName);
+            	imgurls.add(dir.replaceAll("/opt/lampp/htdocs/", "http://127.0.0.1/") + "/" + fileName);
 			}
 
         	// save in mongodb
@@ -125,26 +120,45 @@ public class ProductController {
 	@PostMapping(value = "/analytics")
 	public ResponseEntity<?> getAnalytics(@RequestBody ProductAnalyticsRequest req) {
 		String sql;	
-		
+
 		if(req.product_id == null || req.product_id.equals("ALL")) {
 			sql = "select sum(product_analytics.orders) orders, sum(product_analytics.views) views, product_analytics.date date FROM products INNER JOIN product_analytics on product_analytics.product_id = products.product_id where products.user_id = '"+supplierService.userService.getId() +"'  and (date between '"+ new java.sql.Date(req.from_date.getTime()) +"' and '"+new java.sql.Date(req.to_date.getTime())+"')  GROUP by product_analytics.date order by product_analytics.date asc;";
 		}
 		else {
 			sql = "select product_analytics.orders, product_analytics.views, product_analytics.date FROM products INNER JOIN product_analytics on product_analytics.product_id = products.product_id where products.user_id = "+supplierService.userService.getId()+" and products.product_id = '"+req.product_id+"' and (date between '"+ new java.sql.Date(req.from_date.getTime()) +"' and '"+new java.sql.Date(req.to_date.getTime())+"') GROUP by product_analytics.date order by product_analytics.date asc;";
 		}
+		System.out.println("Jdbc: "+sql);
 		
 		return ResponseEntity.ok(
 			supplierService.userService.jdbc.query(sql, new BeanPropertyRowMapper(ProductAnalyticsResponse.class))
 		);
 	}
 	
-	
+
 	@DeleteMapping(value = "/{productId}")
 	public ResponseEntity<?> deleteProduct(@PathVariable String productId) {
 		mongoConfig.productCollection().deleteOne(new Document("_id", new ObjectId(productId)));
 		supplierService.userService.jdbc.update("delete from shopmart.products where product_id = ?", new Object[] {productId});
 		return ResponseEntity.status(200).body(null);
-	}	
+	}
+	@GetMapping(value = "/approve/{productId}")
+	public ResponseEntity<?> approveProduct(@PathVariable String productId) {
+		supplierService.userService.jdbc.update("update shopmart.products set is_approved = true where product_id = ?", new Object[] {productId});
+		return ResponseEntity.status(200).body(null);
+	}
+	@PutMapping(value = "/increment-views/{productId}")
+	public ResponseEntity<?> incrementProductViews(@PathVariable String productId) {
+		int inserted = supplierService.userService.jdbc.update("update shopmart.product_analytics set views = views + 1 where product_id = ? and date = ?", new Object[] {productId,  new SimpleDateFormat("yyyy-MM-dd").format(new Date())});
+		if(inserted == 0) supplierService.userService.jdbc.update("insert into shopmart.product_analytics (product_id, views, date) values (?, ?, ?)", new Object[] {productId, 1, new Date()});
+		return ResponseEntity.status(200).body(null);
+	}
+	@PutMapping(value = "/increment-orders/{productId}")
+	public ResponseEntity<?> incrementProductOrders(@PathVariable String productId) {
+		int inserted = supplierService.userService.jdbc.update("update shopmart.product_analytics set orders = orders + 1 where product_id = ? and date = ?", new Object[] {productId,  new SimpleDateFormat("yyyy-MM-dd").format(new Date())});
+		if(inserted == 0) supplierService.userService.jdbc.update("insert into shopmart.product_analytics (product_id, orders, date) values (?, ?, ?)", new Object[] {productId, 1,  new Date()});
+		return ResponseEntity.status(200).body(null);
+	}
+	
 }
 
 class ProductAnalyticsResponse {
