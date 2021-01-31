@@ -62,24 +62,6 @@ public class ProductController {
 		
     	JSONObject productObject = new JSONObject(product);
 
-
-//    	try {
-//    		if(productObject.getString("name").length() < 5 ||
-//				productObject.getDouble("price") < 100.00 ||
-//				Arrays.asList("electronics", "appearel").stream().anyMatch(category -> category.equals(productObject.getString("category"))) == false ||
-//				productObject.getJSONArray("description").length() < 3
-//	    	) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new HashMap<String, String>() {{
-//	    		put("message", "bad or insufficient data");
-//	    	}}); 
-//    	}
-//    	catch (JSONException e) {
-//    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new HashMap<String, String>() {{
-//	    		put("message", "bad or insufficient data");
-//	    	}});
-//		}
-
-    	
-		// upload files and save data
 		try {			
         	Document productForMongo = Document.parse(product);
         	productForMongo.append("views", 0);
@@ -158,7 +140,7 @@ public class ProductController {
 		if(inserted == 0) supplierService.userService.jdbc.update("insert into shopmart.product_analytics (product_id, orders, date) values (?, ?, ?)", new Object[] {productId, 1,  new Date()});
 		return ResponseEntity.status(200).body(null);
 	}
-	
+
 }
 
 class ProductAnalyticsResponse {

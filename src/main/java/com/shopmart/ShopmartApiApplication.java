@@ -1,12 +1,6 @@
 package com.shopmart;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
-import org.bson.Document;
-import org.bson.types.ObjectId;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +12,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
+import com.shopmart.model.User;
+import com.shopmart.repository.UserRepository;
 
 @SpringBootApplication
 public class ShopmartApiApplication implements CommandLineRunner  {
 
 	@Autowired private JdbcTemplate jdbc;
+	@Autowired private UserRepository userRepository;
 	@Autowired private com.shopmart.config.MongoConfig mongoConfig;
 	
 	private static final Logger log = LoggerFactory.getLogger(ShopmartApiApplication.class);
@@ -50,7 +44,6 @@ public class ShopmartApiApplication implements CommandLineRunner  {
     public void run(String[] args) throws Exception {
 
 		log.info("Application Started");
-		
 //		List<String> products = jdbc.queryForList("select product_id from products", String.class);
 //		
 //		double pin;

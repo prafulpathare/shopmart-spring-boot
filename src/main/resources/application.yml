@@ -16,8 +16,8 @@ spring:
   datasource:
     password: password
     platform: mysql
-    url: jdbc:mysql://127.0.0.1:3306/shopmart?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
-    username: remote
+    url: jdbc:mysql://127.0.0.1:3306/shopmart?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
   jpa:
     hibernate:
       ddl-auto: update
