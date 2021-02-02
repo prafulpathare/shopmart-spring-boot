@@ -37,12 +37,12 @@ public class Order {
     private Set<OrderItem> order_items;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id", nullable = false, unique = false)
     @JsonIgnore
     private Customer customer;
 	
     @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "address_id", nullable = false)
+    @JoinColumn(name = "address_id", nullable = false, unique = false)
     private Address address;
 
     @Column(name = "payed")

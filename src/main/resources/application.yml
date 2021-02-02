@@ -1,6 +1,9 @@
 jwt:
   secret: authjwt
 
+#server:
+#  port: 8081
+
 spring:
   servlet:
     multipart:
@@ -14,17 +17,21 @@ spring:
 #    url: jdbc:mysql://remotemysql.com:3306/GtcnrPBX0U?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
 #    username: GtcnrPBX0U
   datasource:
-    password: password
+    password: 
     platform: mysql
-    url: jdbc:mysql://127.0.0.1:3306/shopmart?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://127.0.0.1:3306/shopmart?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
     username: root
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
+        ddl-auto: none
         dialect: org.hibernate.dialect.MySQL5Dialect
     show-sql: true
+    generate-ddl: false
+    
+
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com

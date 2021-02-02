@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `GtcnrPBX0U`
+-- Database: `shopmart`
 --
 
 -- --------------------------------------------------------
@@ -38,7 +38,7 @@ CREATE TABLE `addresses` (
   `pincode` varchar(6) DEFAULT NULL,
   `state` varchar(255) DEFAULT NULL,
   `user_id` bigint(20) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `addresses`
@@ -60,7 +60,7 @@ INSERT INTO `addresses` (`address_id`, `address_type`, `city`, `line_one`, `line
 
 CREATE TABLE `customers` (
   `user_id` bigint(20) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `customers`

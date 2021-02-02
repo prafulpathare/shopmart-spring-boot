@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
+import java.util.*;
 import com.shopmart.model.User;
 import com.shopmart.repository.UserRepository;
 
@@ -38,29 +38,25 @@ public class ShopmartApiApplication implements CommandLineRunner  {
 			}
 		};
 	}
-	
-		
+
+
 	@Override
     public void run(String[] args) throws Exception {
 
 		log.info("Application Started");
-//		List<String> products = jdbc.queryForList("select product_id from products", String.class);
-//		
-//		double pin;
-//		
-//		for(int i = 0; i <= 200; i++) {			
-//			for (String productId : products) {
-//				jdbc.update("insert into shopmart.product_analytics (product_id, views, orders, date) values (?, ?, ?, ?)",
-//					productId,
-//					Math.random() * ( 550 - 75 ),
-//					Math.random() * ( 200 - 30 ),
-//					new Date(System.currentTimeMillis() - (i * 24*60*60*1000))
-//				);
-//			}
-//		}
-		
-		
-		
-		
+		List<String> products = jdbc.queryForList("select product_id from products", String.class);
+		double pin;
+
+		for(int i = 0; i <= 200; i++) {			
+			for (String productId : products) {
+				jdbc.update("insert into shopmart.product_analytics (product_id, views, orders, date) values (?, ?, ?, ?)",
+					productId,
+					Math.random() * ( 550 - 75 ),
+					Math.random() * ( 200 - 30 ),
+					new Date(System.currentTimeMillis() - (i * 24*60*60*1000))
+				);
+			}
+		}
+	
 	}
 }

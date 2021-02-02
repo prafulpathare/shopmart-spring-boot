@@ -34,7 +34,16 @@ public class OrderService {
 		
 	private OrderItem getMongoProductById(String orderItemId) {
 		Document obj = mongoConfig.productCollection().find(eq("_id", new ObjectId(orderItemId))).first();
-		return new OrderItem(orderItemId, obj.getString("name"), (double) obj.getInteger("price"), 1, null);
+		
+		double price = 0.0;
+		try {
+			price = obj.getDouble("price");
+		}
+		catch(ClassCastException e) {
+			price = obj.getInteger("price");
+		}
+		
+		return new OrderItem(orderItemId, obj.getString("name"), price, 1, null);
 	}
 
 	public void create(Order order) {
