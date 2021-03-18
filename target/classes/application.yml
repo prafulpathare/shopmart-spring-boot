@@ -1,0 +1,60 @@
+jwt:
+  secret: authjwt
+
+#server:
+#  port: 8081
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 3MB        
+  admin:
+    email: patharepraful@gmail.com
+#  datasource:
+#    password: ZPPS9tlSdR
+#    platform: mysql
+#    url: jdbc:mysql://remotemysql.com:3306/GtcnrPBX0U?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
+#    username: GtcnrPBX0U
+  datasource:
+    password: 
+    platform: mysql
+    url: jdbc:mysql://127.0.0.1:3306/shopmart?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        ddl-auto: none
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+    generate-ddl: false
+    
+
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    password:
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+    username: patharepraful@gmail.com
+
+openapi: 3.0.0
+
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+# 2) Apply the security globally to all operations
+security:
+  - bearerAuth: []         # use the same name as above
